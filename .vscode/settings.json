@@ -1,0 +1,6 @@
+{
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.project.referencedLibraries": [
+        "C:/Program Files/Apache Software Foundation/Tomcat 10.1*.jar"
+    ]
+}
