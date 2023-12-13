@@ -35,6 +35,37 @@ const RecipeItem = ({ favouriteHandler, savedItems }) => {
     setItemSavedStatus(savedItems.some((item) => item.id === recipe.id));
   }, [recipe]);
 
+  const handleFavoriteStatusChange = async () => {
+    try {
+      
+      const response = await fetch(
+        `http://localhost:8080/api/recipes/favorite/${id}}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ isFavorite: !itemSavedStatus , id:recipe.id,recipeurl:recipe.source_url }),
+        }
+      );
+
+      if (response.ok) {
+        const updatedRecipe = await response.json();
+
+        // Update frontend state
+        setItemSavedStatus(!itemSavedStatus);
+
+        // Update savedItems state or fetch the updated data
+        // depending on how your application manages the data
+        // Example: setSavedItems(updatedItems);
+      } else {
+        console.error('Failed to update favorite status');
+      }
+    } catch (error) {
+      console.error('Error updating favorite status:', error);
+    }
+  };
+
   return (
     <div>
       {(loading && (
@@ -78,7 +109,9 @@ const RecipeItem = ({ favouriteHandler, savedItems }) => {
             </div>
             <div className='buttons flex flex-col gap-5 items-start lg:flex-row'>
               <button
-                onClick={() => favouriteHandler(recipe?.id)}
+                onClick={() =>{ favouriteHandler(recipe?.id);
+                handleFavoriteStatusChange()
+                }}
                 className={`bg-gradient-to-br p-3 px-8 rounded-lg text-sm uppercase font-bold tracking-wider mt-2 inline-block shadow-md hover:shadow-lg duration-300 outline-none text-center ${
                   itemSavedStatus
                     ? "from-purple-200 to-purple-300 text-purple-500 shadow-violet-200 hover:shadow-violet-300 hover:from-violet-400 hover:to-violet-500 hover:text-purple-50"

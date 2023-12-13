@@ -71,14 +71,24 @@ const App = () => {
   };
 
   //Save to Favorites
-  const favouriteHandler = (id) => {
-    fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`)
-      .then((res) => res.json())
-      .then((data) => checkLocalData(data?.data?.recipe));
+  // const favouriteHandler = (id) => {
+  //   fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`)
+  //     .then((res) => res.json())
+  //     .then((data) => checkLocalData(data?.data?.recipe));
 
-    navigator("/favourites");
+  //   navigator("/favourites");
+  // };
+  const favouriteHandler = async (id) => {
+    try {
+      const res = await fetch(`https://forkify-api.herokuapp.com/api/v2/recipes/${id}`);
+      if (!res.ok) throw new Error("Something went wrong!");
+      const data = await res.json();
+      checkLocalData(data?.data?.recipe);
+      navigator("/favourites");
+    } catch (error) {
+      console.error("Error fetching recipe:", error);
+    }
   };
-
   //Showing Local storage data
   useEffect(() => {
     localStorage.setItem("recipes", JSON.stringify(savedItems));
